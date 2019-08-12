@@ -2471,7 +2471,7 @@ errr vinfo_init(void)
 
 
 	/* Kill hack */
-	KILL(hack);
+	KILL(hack, vinfo_hack);
 
 
 	/* Success */
