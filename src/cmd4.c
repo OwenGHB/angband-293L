@@ -115,7 +115,7 @@ void do_cmd_change_name(void)
 		display_player(mode);
 
 		/* Prompt */
-		Term_putstr(2, 23, -1, TERM_WHITE, p);
+		Term_putstr(2, Term->hgt-1, -1, TERM_WHITE, p);
 
 		/* Query */
 		ch = inkey();

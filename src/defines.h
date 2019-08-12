@@ -90,6 +90,8 @@
  */
 #define PANEL_WID	33
 
+#define ROW_MAP 1
+#define COL_MAP 13
 
 /*
  * Number of grids in each screen (vertically)
@@ -658,11 +660,7 @@
 #define COL_STUDY		64	/* "Study" */
 
 #define ROW_DEPTH		(Term->hgt-1)
-#define COL_DEPTH		70	/* "Lev NNN" / "NNNN ft" */
-
-#define ROW_MAP			1
-#define COL_MAP			13
-
+#define COL_DEPTH		(Term->wid-10)	/* "Lev NNN" / "NNNN ft" */
 
 /*** General index values ***/
 
