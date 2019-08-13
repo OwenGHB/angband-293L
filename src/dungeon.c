@@ -2724,9 +2724,11 @@ void play_game(bool new_game)
 	/* Process */
 	while (TRUE)
 	{
+		/* Update monster list window */
+		p_ptr->window |= (PW_M_LIST);
+
 		/* Process the level */
 		dungeon();
-
 
 		/* Notice stuff */
 		if (p_ptr->notice) notice_stuff();

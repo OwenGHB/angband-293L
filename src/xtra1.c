@@ -1131,6 +1131,131 @@ static void fix_object(void)
 	}
 }
 
+/* Show the monster list in a window */
+
+static void fix_m_list(void)
+{
+	int i, j; 
+
+	/* Scan windows */
+	for (j = 0; j < 8; j++)
+	{
+		term *old = Term;
+
+		int c = 0;
+
+		/* No window */
+		if (!angband_term[j]) continue;
+
+		/* No relevant flags */
+		if (!(op_ptr->window_flag[j] & (PW_M_LIST))) continue;
+
+		/* Activate */
+		Term_activate(angband_term[j]);
+
+		/* Clear */
+		Term_clear();
+
+		/* reset visible count */
+		for (i = 1; i< z_info->r_max; i++)
+		{
+			monster_race *r_ptr = &r_info[i];
+
+			r_ptr->total_visible = 0;
+		}
+
+		/* Count up the number visible in each race */
+		for (i = 1; i < m_max; i++)
+		{
+			monster_type *m_ptr = &m_list[i];
+			monster_race *r_ptr = &r_info[m_ptr->r_idx];
+
+			/* Skip dead monsters */
+			if (m_ptr->hp < 0) continue;
+
+			/* Skip unseen monsters */
+			if (!m_ptr->ml) continue;
+
+			/* Increase for this race */
+			r_ptr->total_visible++;
+
+			/* Increase total Count */
+			c++;
+		}
+
+		/* Are monsters visible? */
+		if (c)
+		{
+			int  w, h, num = 0;
+
+			(void)Term_get_size(&w, &h);
+
+			c_prt(TERM_WHITE,format("You can see %d monster%s", c, (c > 1 ? "s:" : ":")), 0, 0);
+
+			for (i = 1; i< z_info->r_max; i++)
+			{
+				monster_race *r_ptr = &r_info[i];
+				monster_lore *l_ptr = &l_list[i];
+
+				/* Default Colour */
+				byte attr = TERM_SLATE;
+
+				/* Only visible monsters */
+				if (!r_ptr->total_visible) continue;
+
+				/* Uniques */
+				if (r_ptr->flags1 & RF1_UNIQUE)
+				{
+					attr = TERM_L_BLUE;
+				}
+
+				/* Have we ever killed one? */
+				if (l_ptr->r_tkills)
+				{
+					if (r_ptr->level > p_ptr->depth)
+					{
+						attr = TERM_VIOLET;
+
+						if (r_ptr->flags1 & RF1_UNIQUE)
+						{
+							attr = TERM_RED;
+						}
+					}
+				}
+				else
+				{
+					if (!(r_ptr->flags1 & RF1_UNIQUE)) attr = TERM_GREEN;
+				}
+
+
+				/* Dump the monster name */
+				if (r_ptr->total_visible == 1)
+				{
+					c_prt(attr, (r_name + r_ptr->name), (num % (h - 1)) + 1, (num / (h - 1) * 26));
+				}
+				else
+				{
+					c_prt(attr,format("%s (x%d)",r_name + r_ptr->name, r_ptr->total_visible), (num % (h - 1)) + 1, (num / (h - 1)) * 26);
+				}
+
+				num++;
+
+			}
+
+		}
+		else
+		{
+			c_prt(TERM_WHITE,"You see no monsters.",0,0);
+		}
+
+		/* Fresh */
+		Term_fresh();
+
+		/* Restore */
+		Term_activate(old);
+	}
+}
+
 
 /*
  * Calculate number of spells player should have, and forget,
@@ -2932,6 +3057,13 @@ void window_stuff(void)
 	{
 		p_ptr->window &= ~(PW_MESSAGE);
 		fix_message();
+	}
+
+	/* Display monster list */
+	if (p_ptr->window & (PW_M_LIST))
+	{
+		p_ptr->window &= ~(PW_M_LIST);
+		fix_m_list();
 	}
 
 	/* Display overhead view */

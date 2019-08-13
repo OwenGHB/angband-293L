@@ -354,6 +354,8 @@ struct monster_race
 
 	byte max_num;			/* Maximum population allowed per level */
 	byte cur_num;			/* Monster population on current level */
+
+	byte total_visible;		/* Amount of this race that are visible */
 };
 
 

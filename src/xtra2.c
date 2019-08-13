@@ -1902,6 +1902,8 @@ void monster_death(int m_idx)
 	y = m_ptr->fy;
 	x = m_ptr->fx;
 
+	/* Update monster list window */
+	p_ptr->window |= (PW_M_LIST);
 
 	/* Drop objects being carried */
 	for (this_o_idx = m_ptr->hold_o_idx; this_o_idx; this_o_idx = next_o_idx)
