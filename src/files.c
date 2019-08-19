@@ -1317,13 +1317,30 @@ static void display_player_xtra_info(void)
 
 
 	/* Advance Experience */
-	Term_putstr(col, 13, -1, TERM_WHITE, "Adv Exp");
+	if (toggle_xp)
+	{
+		Term_putstr(col, 13, -1, TERM_WHITE, "Nxt Exp");
+	}
+	else
+	{
+		Term_putstr(col, 13, -1, TERM_WHITE, "Adv Exp");
+	}
 	if (p_ptr->lev < PY_MAX_LEVEL)
 	{
-		s32b advance = (player_exp[p_ptr->lev - 1] *
-		                p_ptr->expfact / 100L);
-		Term_putstr(col+8, 13, -1, TERM_L_GREEN,
-		            format("%10ld", advance));
+		if (toggle_xp)
+		{
+			s32b advance = ((player_exp[p_ptr->lev - 1] *
+                                        p_ptr->expfact / 100L) - p_ptr->exp);
+                        Term_putstr(col+8, 13, -1, TERM_L_GREEN,
+                                    format("%10ld", advance));
+		}
+		else
+		{
+			s32b advance = (player_exp[p_ptr->lev - 1] *
+			                p_ptr->expfact / 100L);
+			Term_putstr(col+8, 13, -1, TERM_L_GREEN,
+			            format("%10ld", advance));
+		}
 	}
 	else
 	{

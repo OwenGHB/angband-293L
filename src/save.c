@@ -10,6 +10,28 @@
 
 #include "angband.h"
 
+static const char *races[] = { "Human", "Half Elf","Elf","Hobbit", "Gnome", "Dwarf", "Half Orc", "Half Troll","Dunadan", "High Elf"};
+static const char *classes[] = { "Warrior","Mage","Priest","Rogue","Ranger","Paladin"};
+
+
+void updatecharinfoS(void)
+{
+	//File Output + Lookup Tables
+	char tmp_Path[1024];
+	FILE *oFile;
+	int calcDepth = p_ptr->max_depth * 50;
+	path_build(tmp_Path, sizeof(tmp_Path), ANGBAND_DIR_USER, "CharOutput.txt");
+	oFile = fopen(tmp_Path, "w");
+	fprintf(oFile, "{\n");
+	fprintf(oFile, "race: \"%s\",\n", races[p_ptr->prace]);
+	fprintf(oFile, "class: \"%s\",\n", classes[p_ptr->pclass]);
+	fprintf(oFile, "cLvl: \"%i\",\n", p_ptr->lev);
+	fprintf(oFile, "mDepth: \"%i\",\n", calcDepth);
+	fprintf(oFile, "isDead: \"%i\",\n", p_ptr->is_dead);
+	fprintf(oFile, "killedBy: \"%s\"\n", p_ptr->died_from);
+	fprintf(oFile, "}");
+	fclose(oFile);
+}
 
 #ifdef FUTURE_SAVEFILES
 
@@ -1539,6 +1561,7 @@ static bool wr_savefile_new(void)
 	/* Write the "encoded checksum" */
 	wr_u32b(x_stamp);
 
+	updatecharinfoS();
 
 	/* Error in save */
 	if (ferror(fff) || (fflush(fff) == EOF)) return FALSE;

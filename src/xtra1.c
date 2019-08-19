@@ -198,16 +198,45 @@ static void prt_exp(void)
 {
 	char out_val[32];
 
-	sprintf(out_val, "%8ld", (long)p_ptr->exp);
+	if (toggle_xp)
+	{
+		sprintf(out_val, "%8ld", (long)((player_exp[p_ptr->lev - 1] * p_ptr->expfact / 100L)-p_ptr->exp));
+	}
+	else
+	{
+		if (p_ptr->lev >= PY_MAX_LEVEL)
+		{
+			sprintf(out_val, "%8ld", (long)p_ptr->exp);
+		}
+		else
+		{
+			sprintf(out_val, "%8ld", (long)p_ptr->exp);
+		}
+	}
 
 	if (p_ptr->exp >= p_ptr->max_exp)
 	{
-		put_str("EXP ", ROW_EXP, 0);
+		if (toggle_xp)
+                {
+			put_str("NXT ", ROW_EXP, 0);
+                }
+		else
+		{
+			put_str("EXP ", ROW_EXP, 0);
+		}
 		c_put_str(TERM_L_GREEN, out_val, ROW_EXP, COL_EXP + 4);
 	}
 	else
 	{
-		put_str("Exp ", ROW_EXP, 0);
+		if (toggle_xp)
+		{
+			put_str("Nxt ", ROW_EXP, 0);
+		}
+		else
+		{
+			put_str("Exp ", ROW_EXP, 0);
+		}
+
 		c_put_str(TERM_YELLOW, out_val, ROW_EXP, COL_EXP + 4);
 	}
 }
@@ -1198,7 +1227,7 @@ static void fix_m_list(void)
 				monster_lore *l_ptr = &l_list[i];
 
 				/* Default Colour */
-				byte attr = TERM_SLATE;
+				byte attr = TERM_WHITE;
 
 				/* Only visible monsters */
 				if (!r_ptr->total_visible) continue;
@@ -1206,7 +1235,7 @@ static void fix_m_list(void)
 				/* Uniques */
 				if (r_ptr->flags1 & RF1_UNIQUE)
 				{
-					attr = TERM_L_BLUE;
+					attr = TERM_VIOLET;
 				}
 
 				/* Have we ever killed one? */
@@ -1214,17 +1243,17 @@ static void fix_m_list(void)
 				{
 					if (r_ptr->level > p_ptr->depth)
 					{
-						attr = TERM_VIOLET;
+						attr = TERM_RED;
 
 						if (r_ptr->flags1 & RF1_UNIQUE)
 						{
-							attr = TERM_RED;
+							attr = TERM_L_RED;
 						}
 					}
 				}
 				else
 				{
-					if (!(r_ptr->flags1 & RF1_UNIQUE)) attr = TERM_GREEN;
+					if (!(r_ptr->flags1 & RF1_UNIQUE)) attr = TERM_YELLOW;
 				}
 
 

@@ -2675,7 +2675,7 @@
 #define OPT_auto_more				71
 #define OPT_smart_monsters			72
 #define OPT_smart_packs				73
-/* xxx */
+#define OPT_toggle_xp                           74
 /* xxx */
 /* xxx */
 /* xxx */
@@ -2793,7 +2793,7 @@
 #define auto_more				op_ptr->opt[OPT_auto_more]
 #define smart_monsters			op_ptr->opt[OPT_smart_monsters]
 #define smart_packs				op_ptr->opt[OPT_smart_packs]
-/* xxx */
+#define toggle_xp				op_ptr->opt[OPT_toggle_xp]
 /* xxx */
 /* xxx */
 /* xxx */
